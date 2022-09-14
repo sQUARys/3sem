@@ -33,35 +33,35 @@ func main() {
 
 	fmt.Println("\nAddToTop func.")
 	list.AddToTop("Hello")
-	errorHandler(list.printAllList()) // OUTPUT : "Hello"
+	errorHandler(list.printAllList()) // OUTPUT : "Hello";
 
 	fmt.Println("\nAddToTop func.")
 	list.AddToTop("Bye")
-	errorHandler(list.printAllList()) // OUTPUT : "Bye" "Hello"
+	errorHandler(list.printAllList()) // OUTPUT : "Bye"; "Hello";
 
 	fmt.Println("\nAddToEnd func.")
 	list.AddToEnd("Ok")
-	errorHandler(list.printAllList()) // OUTPUT : "Bye" "Hello" "Ok"
+	errorHandler(list.printAllList()) // OUTPUT : "Bye"; "Hello"; "Ok";
 
 	fmt.Println("\nRemoveLastElement func.")
 	errorHandler(list.RemoveLastElement())
-	errorHandler(list.printAllList()) // OUTPUT : "Bye" "Hello"
+	errorHandler(list.printAllList()) // OUTPUT : "Bye"; "Hello";
 
 	fmt.Println("\nRemoveFirstElement func.")
 	errorHandler(list.RemoveFirstElement())
-	errorHandler(list.printAllList()) // OUTPUT : "Hello"
+	errorHandler(list.printAllList()) // OUTPUT : "Hello";
 
 	fmt.Println("\ngetSize func.")
 	list.insertElementByIndex(1, element{
 		title: "Insert",
 	})
-	errorHandler(list.printAllList()) // OUTPUT : "Hello" "Insert"
+	errorHandler(list.printAllList()) // OUTPUT : "Hello"; "Insert";
 
 	fmt.Println("\ninsertElementByIndex func.")
 	list.insertElementByIndex(1, element{
 		title: "New Insert",
 	})
-	errorHandler(list.printAllList()) // OUTPUT : "Hello" "New Insert" "Insert"
+	errorHandler(list.printAllList()) // OUTPUT : "Hello"; "New Insert"; "Insert";
 
 	fmt.Println("\ngetElementByIndex func.")
 	elem := list.getElementByIndex(1)
@@ -72,14 +72,14 @@ func main() {
 
 	fmt.Println("\ndeleteElementByIndex func.")
 	errorHandler(list.deleteElementByIndex(1))
-	errorHandler(list.printAllList()) // OUTPUT : "Hello" "Insert"
+	errorHandler(list.printAllList()) // OUTPUT : "Hello"; "Insert";
 
 	fmt.Println("\nchangeElementByIndex func.")
 	elementToUpdate := element{
 		title: "Changes insert",
 	}
 	errorHandler(list.changeElementByIndex(1, elementToUpdate))
-	errorHandler(list.printAllList()) // OUTPUT : "Hello" "Changes insert"
+	errorHandler(list.printAllList()) // OUTPUT : "Hello"; "Changes insert"
 
 	fmt.Print("\nIsEmpty: ", list.isEmpty(), "\n") //OUTPUT : IsEmpty: false
 
@@ -89,7 +89,7 @@ func main() {
 
 	fmt.Println("\nmergeList func.")
 	list.mergeList(*newList)
-	errorHandler(list.printAllList()) // OUTPUT : "Hello" "Changes insert" "New List 1" "New List 2"
+	errorHandler(list.printAllList()) // OUTPUT : "Hello"; "Changes insert"; "New List 1"; "New List 2";
 
 	fmt.Println("\ndeleteAll func.")
 	list.deleteAll()
@@ -181,7 +181,7 @@ func (list *singlyLinkedList) printAllList() error { // for beautiful output
 	current := list.head // create a start position of list
 
 	for current != nil {
-		fmt.Print(current.title + " ") // print each element
+		fmt.Print(current.title + "; ") // print each element
 		current = current.next
 	}
 
