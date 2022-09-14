@@ -30,88 +30,102 @@ type singlyLinkedList struct { // list which contains a head element, and lenß
 func main() {
 	list := new()
 
+	fmt.Println("\nAddToTop func.")
 	list.AddToTop("Hello")
 	list.printAllList() // OUTPUT : "Hello"
 
+	fmt.Println("\nAddToTop func.")
 	list.AddToTop("Bye")
 	list.printAllList() // OUTPUT : "Bye" "Hello"
 
+	fmt.Println("\nAddToEnd func.")
 	list.AddToEnd("Ok")
 	list.printAllList() // OUTPUT : "Bye" "Hello" "Ok"
 
+	fmt.Println("\nRemoveLastElement func.")
 	list.RemoveLastElement()
 	list.printAllList() // OUTPUT : "Bye" "Hello"
 
+	fmt.Println("\nRemoveFirstElement func.")
 	list.RemoveFirstElement()
 	list.printAllList() // OUTPUT : "Hello"
 
+	fmt.Println("\ngetSize func.")
 	list.insertElementByIndex(1, element{
 		title: "Insert",
 	})
 	list.printAllList() // OUTPUT : "Hello" "Insert"
 
+	fmt.Println("\ninsertElementByIndex func.")
 	list.insertElementByIndex(1, element{
 		title: "New Insert",
 	})
 	list.printAllList() // OUTPUT : "Hello" "New Insert" "Insert"
 
+	fmt.Println("\ngetElementByIndex func.")
 	elem := list.getElementByIndex(1)
 	fmt.Println(elem.title) // OUTPUT :  "New Insert"
 
-	fmt.Println(list.Size()) // OUTPUT : 3
+	fmt.Println("\ngetSize func.")
+	fmt.Println(list.getSize()) // OUTPUT : 3
 
+	fmt.Println("\ndeleteElementByIndex func.")
 	list.deleteElementByIndex(1)
 	list.printAllList() // OUTPUT : "Hello" "Insert"
 
+	fmt.Println("\nchangeElementByIndex func.")
 	list.changeElementByIndex(1, element{title: "Changes insert"})
 	list.printAllList() // OUTPUT : "Hello" "Changes insert"
 
-	fmt.Print("IsEmpty: ", list.isEmpty(), "\n") //OUTPUT : IsEmpty: false
+	fmt.Print("\nIsEmpty: ", list.isEmpty(), "\n") //OUTPUT : IsEmpty: false
 
 	newList := new()
 	newList.AddToTop("New List 1")
 	newList.AddToEnd("New List 2") // new list contains two elements
 
+	fmt.Println("\nmergeList func.")
 	list.mergeList(*newList)
 	list.printAllList() // OUTPUT : "Hello" "Changes insert" "New List 1" "New List 2"
 
+	fmt.Println("\ndeleteAll func.")
 	list.deleteAll()
-	fmt.Print("IsEmpty: ", list.isEmpty(), "\n") //OUTPUT : IsEmpty: true
+	fmt.Print("\nIsEmpty: ", list.isEmpty(), "\n") //OUTPUT : IsEmpty: true
 
 }
 
 func new() *singlyLinkedList { // constructor of list
+	fmt.Println("Create new list.")
 	return &singlyLinkedList{}
 }
 
 func (list *singlyLinkedList) AddToTop(title string) { // func of adding element with title to top of list
-	element := &element{ // create element with input title
+	elementToPaste := &element{ // create element with input title
 		title: title,
 	}
 
 	if list.isEmpty() { // list isn't contain any elements
-		list.head = element
+		list.head = elementToPaste
 	} else { // list contains something
-		element.next = list.head
-		list.head = element
+		elementToPaste.next = list.head
+		list.head = elementToPaste
 	}
 	list.len++ // we just added a new element at list, so we need to increase len
 
 }
 
 func (list *singlyLinkedList) AddToEnd(title string) { // func of adding element with title to the end of list
-	element := &element{ // create element with input title
+	elementToPaste := &element{ // create element with input title
 		title: title,
 	}
 
 	if list.isEmpty() { // list isn't contain any elements
-		list.head = element
+		list.head = elementToPaste
 	} else { // list contains something
 		current := list.head
 		for current.next != nil { // while we have a next element, go to next
 			current = current.next
 		}
-		current.next = element // find an end of list, so paste an element
+		current.next = elementToPaste // find an end of list, so paste an element
 	}
 
 	list.len++
@@ -156,7 +170,7 @@ func (list *singlyLinkedList) RemoveLastElement() error {
 	return nil
 }
 
-func (list *singlyLinkedList) Size() int {
+func (list *singlyLinkedList) getSize() int {
 	return list.len
 }
 
@@ -164,18 +178,21 @@ func (list *singlyLinkedList) printAllList() error { // for beautiful output
 	if list.isEmpty() { // if list is empty, it isn't contains anything
 		return fmt.Errorf("printAllList: List is empty")
 	}
+
 	current := list.head // create a start position of list
+
 	for current != nil {
 		fmt.Print(current.title + " ") // print each element
 		current = current.next
 	}
+
 	fmt.Println("")
 	return nil
 }
 
 func (list *singlyLinkedList) getElementByIndex(index int) *element {
 	head := list.head // create head element
-	for i := 0; i < index; i++ {
+	for currentIndex := 0; currentIndex < index; currentIndex++ {
 		head = head.next // go to the next position
 	}
 	return head
@@ -184,7 +201,7 @@ func (list *singlyLinkedList) getElementByIndex(index int) *element {
 func (list *singlyLinkedList) deleteElementByIndex(index int) error {
 	var current *element // create element type
 
-	if index < 0 || index > list.Size() {
+	if index < 0 || index > list.getSize() {
 		return fmt.Errorf("deleteElementByIndex : index number is invalid")
 	}
 	if index == 0 { // if we need to delete a first element of list
@@ -204,7 +221,7 @@ func (list *singlyLinkedList) deleteAll() {
 }
 
 func (list *singlyLinkedList) changeElementByIndex(index int, newElement element) error {
-	if index < 0 || index >= list.Size() {
+	if index < 0 || index >= list.getSize() {
 		return fmt.Errorf("changeElementByIndex: index number is invalid.")
 	}
 
@@ -214,17 +231,18 @@ func (list *singlyLinkedList) changeElementByIndex(index int, newElement element
 }
 
 func (list *singlyLinkedList) isEmpty() bool {
-	return list.Size() == 0
+	return list.getSize() == 0
 }
 
 func (list *singlyLinkedList) mergeList(secondList singlyLinkedList) {
-	tail := list.getElementByIndex(list.Size() - 1) // get 'tail' element of current list
-	head := secondList.head                         // get 'head' element in new list
-	tail.next = head                                //connect current list with new list
+	tail := list.getElementByIndex(list.getSize() - 1) // get 'tail' element of current list
+	head := secondList.head                            // get 'head' element in new list
+	tail.next = head                                   //connect current list with new list
+	list.len += secondList.len
 }
 
 func (list *singlyLinkedList) insertElementByIndex(index int, element element) { // inserting before an element that was previously available by input index numberß
-	if index < 0 || index > list.Size() { // check if index is valid for usß
+	if index < 0 || index > list.getSize() { // check if index is valid for usß
 		fmt.Println("Index is invalid.")
 	} else {
 		if index == 0 { // if need to paste before first list's element
