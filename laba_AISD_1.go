@@ -22,8 +22,7 @@ type element struct { // element of list
 	next  *element
 }
 
-type singlyLinkedList struct { // list which contains a head element, and lenß
-	len  int
+type singlyLinkedList struct { // list which contains a head element, and len
 	head *element
 }
 
@@ -32,35 +31,35 @@ func main() {
 
 	fmt.Println("\nAddToTop func.")
 	list.AddToTop("Hello")
-	list.printAllList() // OUTPUT : "Hello"
+	errorHandler(list.printAllList()) // OUTPUT : "Hello"
 
 	fmt.Println("\nAddToTop func.")
 	list.AddToTop("Bye")
-	list.printAllList() // OUTPUT : "Bye" "Hello"
+	errorHandler(list.printAllList()) // OUTPUT : "Bye" "Hello"
 
 	fmt.Println("\nAddToEnd func.")
 	list.AddToEnd("Ok")
-	list.printAllList() // OUTPUT : "Bye" "Hello" "Ok"
+	errorHandler(list.printAllList()) // OUTPUT : "Bye" "Hello" "Ok"
 
 	fmt.Println("\nRemoveLastElement func.")
-	list.RemoveLastElement()
-	list.printAllList() // OUTPUT : "Bye" "Hello"
+	errorHandler(list.RemoveLastElement())
+	errorHandler(list.printAllList()) // OUTPUT : "Bye" "Hello"
 
 	fmt.Println("\nRemoveFirstElement func.")
-	list.RemoveFirstElement()
-	list.printAllList() // OUTPUT : "Hello"
+	errorHandler(list.RemoveFirstElement())
+	errorHandler(list.printAllList()) // OUTPUT : "Hello"
 
 	fmt.Println("\ngetSize func.")
 	list.insertElementByIndex(1, element{
 		title: "Insert",
 	})
-	list.printAllList() // OUTPUT : "Hello" "Insert"
+	errorHandler(list.printAllList()) // OUTPUT : "Hello" "Insert"
 
 	fmt.Println("\ninsertElementByIndex func.")
 	list.insertElementByIndex(1, element{
 		title: "New Insert",
 	})
-	list.printAllList() // OUTPUT : "Hello" "New Insert" "Insert"
+	errorHandler(list.printAllList()) // OUTPUT : "Hello" "New Insert" "Insert"
 
 	fmt.Println("\ngetElementByIndex func.")
 	elem := list.getElementByIndex(1)
@@ -70,12 +69,15 @@ func main() {
 	fmt.Println(list.getSize()) // OUTPUT : 3
 
 	fmt.Println("\ndeleteElementByIndex func.")
-	list.deleteElementByIndex(1)
-	list.printAllList() // OUTPUT : "Hello" "Insert"
+	errorHandler(list.deleteElementByIndex(1))
+	errorHandler(list.printAllList()) // OUTPUT : "Hello" "Insert"
 
 	fmt.Println("\nchangeElementByIndex func.")
-	list.changeElementByIndex(1, element{title: "Changes insert"})
-	list.printAllList() // OUTPUT : "Hello" "Changes insert"
+	elementToUpdate := element{
+		title: "Changes insert",
+	}
+	errorHandler(list.changeElementByIndex(1, elementToUpdate))
+	errorHandler(list.printAllList()) // OUTPUT : "Hello" "Changes insert"
 
 	fmt.Print("\nIsEmpty: ", list.isEmpty(), "\n") //OUTPUT : IsEmpty: false
 
@@ -85,7 +87,7 @@ func main() {
 
 	fmt.Println("\nmergeList func.")
 	list.mergeList(*newList)
-	list.printAllList() // OUTPUT : "Hello" "Changes insert" "New List 1" "New List 2"
+	errorHandler(list.printAllList()) // OUTPUT : "Hello" "Changes insert" "New List 1" "New List 2"
 
 	fmt.Println("\ndeleteAll func.")
 	list.deleteAll()
@@ -109,8 +111,6 @@ func (list *singlyLinkedList) AddToTop(title string) { // func of adding element
 		elementToPaste.next = list.head
 		list.head = elementToPaste
 	}
-	list.len++ // we just added a new element at list, so we need to increase len
-
 }
 
 func (list *singlyLinkedList) AddToEnd(title string) { // func of adding element with title to the end of list
@@ -127,11 +127,7 @@ func (list *singlyLinkedList) AddToEnd(title string) { // func of adding element
 		}
 		current.next = elementToPaste // find an end of list, so paste an element
 	}
-
-	list.len++
-
 	return
-
 }
 
 func (list *singlyLinkedList) RemoveFirstElement() error {
@@ -140,7 +136,6 @@ func (list *singlyLinkedList) RemoveFirstElement() error {
 	}
 
 	list.head = list.head.next // find a first(head)element and pass this
-	list.len--                 // we delete an element, so we need to decrease len
 
 	return nil
 }
@@ -165,13 +160,15 @@ func (list *singlyLinkedList) RemoveLastElement() error {
 		list.head = nil
 	}
 
-	list.len-- // we removed element, so we need to decrease len
-
 	return nil
 }
 
 func (list *singlyLinkedList) getSize() int {
-	return list.len
+	size := 0
+	for head := list.head; head != nil; head = head.next {
+		size++
+	}
+	return size
 }
 
 func (list *singlyLinkedList) printAllList() error { // for beautiful output
@@ -211,13 +208,11 @@ func (list *singlyLinkedList) deleteElementByIndex(index int) error {
 		current = list.getElementByIndex(index - 1) // get previous element by index
 		current.next = current.next.next            // delete current element
 	}
-	list.len--
 	return nil
 }
 
 func (list *singlyLinkedList) deleteAll() {
 	list.head = nil
-	list.len = 0
 }
 
 func (list *singlyLinkedList) changeElementByIndex(index int, newElement element) error {
@@ -238,7 +233,6 @@ func (list *singlyLinkedList) mergeList(secondList singlyLinkedList) {
 	tail := list.getElementByIndex(list.getSize() - 1) // get 'tail' element of current list
 	head := secondList.head                            // get 'head' element in new list
 	tail.next = head                                   //connect current list with new list
-	list.len += secondList.len
 }
 
 func (list *singlyLinkedList) insertElementByIndex(index int, element element) { // inserting before an element that was previously available by input index numberß
@@ -254,7 +248,12 @@ func (list *singlyLinkedList) insertElementByIndex(index int, element element) {
 			previousElement.next = &element
 			element.next = memory
 		}
-		list.len++
 	}
+}
 
+func errorHandler(handledError error) { // for handling each error in the list like shell for error(middleware)
+	outputFormat := "Handled error : %s. " // format of error
+	if handledError != nil {               // if we have an error
+		fmt.Errorf(outputFormat, handledError) // out error
+	}
 }
