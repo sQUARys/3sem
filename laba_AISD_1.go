@@ -254,8 +254,8 @@ func (list *singlyLinkedList) insertElementByIndex(index int, element element) {
 }
 
 func errorHandler(handledError error) { // for handling each error in the list like shell for error(middleware)
-	outputFormat := "Handled error : %s. " // format of error
-	if handledError != nil {               // if we have an error
+	outputFormat := "\nHandled error : %s. " // format of error
+	if handledError != nil {                 // if we have an error
 		fmt.Println(fmt.Errorf(outputFormat, handledError)) // out error
 	}
 }
