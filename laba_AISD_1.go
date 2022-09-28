@@ -13,76 +13,77 @@ type singlyLinkedList struct { // list which contains a head element, and len
 	head *element
 }
 
-func main() {
-	list := new()
-
-	errorHandler(list.printAllList()) // OUTPUT : Handled error : printAllList: List is empty.
-
-	fmt.Println("\nAddToTop func.")
-	list.AddToTop("Hello")
-	errorHandler(list.printAllList()) // OUTPUT : "Hello";
-
-	fmt.Println("\nAddToTop func.")
-	list.AddToTop("Bye")
-	errorHandler(list.printAllList()) // OUTPUT : "Bye"; "Hello";
-
-	fmt.Println("\nAddToEnd func.")
-	list.AddToEnd("Ok")
-	errorHandler(list.printAllList()) // OUTPUT : "Bye"; "Hello"; "Ok";
-
-	fmt.Println("\nRemoveLastElement func.")
-	errorHandler(list.RemoveLastElement())
-	errorHandler(list.printAllList()) // OUTPUT : "Bye"; "Hello";
-
-	fmt.Println("\nRemoveFirstElement func.")
-	errorHandler(list.RemoveFirstElement())
-	errorHandler(list.printAllList()) // OUTPUT : "Hello";
-
-	fmt.Println("\ngetSize func.")
-	list.insertElementByIndex(1, element{
-		title: "Insert",
-	})
-	errorHandler(list.printAllList()) // OUTPUT : "Hello"; "Insert";
-
-	fmt.Println("\ninsertElementByIndex func.")
-	list.insertElementByIndex(1, element{
-		title: "New Insert",
-	})
-	errorHandler(list.printAllList()) // OUTPUT : "Hello"; "New Insert"; "Insert";
-
-	fmt.Println("\ngetElementByIndex func.")
-	elem := list.getElementByIndex(1)
-	fmt.Println(elem.title) // OUTPUT :  "New Insert"
-
-	fmt.Println("\ngetSize func.")
-	fmt.Println(list.getSize()) // OUTPUT : 3
-
-	fmt.Println("\ndeleteElementByIndex func.")
-	errorHandler(list.deleteElementByIndex(1))
-	errorHandler(list.printAllList()) // OUTPUT : "Hello"; "Insert";
-
-	fmt.Println("\nchangeElementByIndex func.")
-	elementToUpdate := element{
-		title: "Changes insert",
-	}
-	errorHandler(list.changeElementByIndex(1, elementToUpdate))
-	errorHandler(list.printAllList()) // OUTPUT : "Hello"; "Changes insert"
-
-	fmt.Print("\nIsEmpty: ", list.isEmpty(), "\n") //OUTPUT : IsEmpty: false
-
-	newList := new()
-	newList.AddToTop("New List 1")
-	newList.AddToEnd("New List 2") // new list contains two elements
-
-	fmt.Println("\nmergeList func.")
-	list.mergeList(*newList)
-	errorHandler(list.printAllList()) // OUTPUT : "Hello"; "Changes insert"; "New List 1"; "New List 2";
-
-	fmt.Println("\ndeleteAll func.")
-	list.deleteAll()
-	fmt.Print("\nIsEmpty: ", list.isEmpty(), "\n") //OUTPUT : IsEmpty: true
-
-}
+//
+//func main() {
+//	list := new()
+//
+//	errorHandler(list.printAllList()) // OUTPUT : Handled error : printAllList: List is empty.
+//
+//	fmt.Println("\nAddToTop func.")
+//	list.AddToTop("Hello")
+//	errorHandler(list.printAllList()) // OUTPUT : "Hello";
+//
+//	fmt.Println("\nAddToTop func.")
+//	list.AddToTop("Bye")
+//	errorHandler(list.printAllList()) // OUTPUT : "Bye"; "Hello";
+//
+//	fmt.Println("\nAddToEnd func.")
+//	list.AddToEnd("Ok")
+//	errorHandler(list.printAllList()) // OUTPUT : "Bye"; "Hello"; "Ok";
+//
+//	fmt.Println("\nRemoveLastElement func.")
+//	errorHandler(list.RemoveLastElement())
+//	errorHandler(list.printAllList()) // OUTPUT : "Bye"; "Hello";
+//
+//	fmt.Println("\nRemoveFirstElement func.")
+//	errorHandler(list.RemoveFirstElement())
+//	errorHandler(list.printAllList()) // OUTPUT : "Hello";
+//
+//	fmt.Println("\ngetSize func.")
+//	list.insertElementByIndex(1, element{
+//		title: "Insert",
+//	})
+//	errorHandler(list.printAllList()) // OUTPUT : "Hello"; "Insert";
+//
+//	fmt.Println("\ninsertElementByIndex func.")
+//	list.insertElementByIndex(1, element{
+//		title: "New Insert",
+//	})
+//	errorHandler(list.printAllList()) // OUTPUT : "Hello"; "New Insert"; "Insert";
+//
+//	fmt.Println("\ngetElementByIndex func.")
+//	elem := list.getElementByIndex(1)
+//	fmt.Println(elem.title) // OUTPUT :  "New Insert"
+//
+//	fmt.Println("\ngetSize func.")
+//	fmt.Println(list.getSize()) // OUTPUT : 3
+//
+//	fmt.Println("\ndeleteElementByIndex func.")
+//	errorHandler(list.deleteElementByIndex(1))
+//	errorHandler(list.printAllList()) // OUTPUT : "Hello"; "Insert";
+//
+//	fmt.Println("\nchangeElementByIndex func.")
+//	elementToUpdate := element{
+//		title: "Changes insert",
+//	}
+//	errorHandler(list.changeElementByIndex(1, elementToUpdate))
+//	errorHandler(list.printAllList()) // OUTPUT : "Hello"; "Changes insert"
+//
+//	fmt.Print("\nIsEmpty: ", list.isEmpty(), "\n") //OUTPUT : IsEmpty: false
+//
+//	newList := new()
+//	newList.AddToTop("New List 1")
+//	newList.AddToEnd("New List 2") // new list contains two elements
+//
+//	fmt.Println("\nmergeList func.")
+//	list.mergeList(*newList)
+//	errorHandler(list.printAllList()) // OUTPUT : "Hello"; "Changes insert"; "New List 1"; "New List 2";
+//
+//	fmt.Println("\ndeleteAll func.")
+//	list.deleteAll()
+//	fmt.Print("\nIsEmpty: ", list.isEmpty(), "\n") //OUTPUT : IsEmpty: true
+//
+//}
 
 func new() *singlyLinkedList { // constructor of list
 	fmt.Println("Create new list.")
