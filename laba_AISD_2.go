@@ -19,27 +19,27 @@ func getDistance(pointA Point, pointB Point) float64 {
 }
 
 func findClosestPointsInsideSide(points []Point, leftSideIndex int, rightSideIndex int) (float64, []Point) {
-	var minimalDistance float64 = -1
+	var minimalDistance = math.Inf(+1)
 	closestPoints := make([]Point, 2)
 
 	for i := leftSideIndex; i < rightSideIndex+1; i++ {
 		for j := i + 1; j < rightSideIndex+1; j++ {
 			currentDistance := getDistance(points[i], points[j])
 			if currentDistance < minimalDistance {
+				closestPoints = make([]Point, 0)
 				minimalDistance = currentDistance
 				closestPoints = append(closestPoints, points[i])
 				closestPoints = append(closestPoints, points[j])
 			}
 		}
 	}
-
 	return minimalDistance, closestPoints
 }
 
 func findClosestPoints(pointsSortedByX []Point, pointsSortedByY []Point, leftSideIndex int, rightSideIndex int) (float64, []Point) {
-	leftSidePointsForY := []Point{}
-	rightSidePointsForY := []Point{}
-	pointsMemory := []Point{}
+	var leftSidePointsForY []Point
+	var rightSidePointsForY []Point
+	var pointsMemory []Point
 
 	var currentDistance float64 = -1
 	var minimalDistance float64 = -1
@@ -51,7 +51,6 @@ func findClosestPoints(pointsSortedByX []Point, pointsSortedByY []Point, leftSid
 	}
 
 	middleIndex := (leftSideIndex + rightSideIndex) / 2
-
 	for i := 0; i < len(pointsSortedByY); i++ {
 		if pointsSortedByY[i].x < pointsSortedByX[middleIndex].x {
 			leftSidePointsForY = append(leftSidePointsForY, pointsSortedByY[i])
@@ -62,16 +61,15 @@ func findClosestPoints(pointsSortedByX []Point, pointsSortedByY []Point, leftSid
 
 	distance1, closestPoints1 := findClosestPoints(pointsSortedByX, leftSidePointsForY, leftSideIndex, middleIndex)
 	distance2, closestPoints2 := findClosestPoints(pointsSortedByX, rightSidePointsForY, middleIndex+1, rightSideIndex)
-
 	if distance1 < distance2 {
 		minimalDistance = distance1
-		//closestPoints = closestPoints1
 		copy(closestPoints, closestPoints1)
 	} else {
 		minimalDistance = distance2
-		//closestPoints = closestPoints2
 		copy(closestPoints, closestPoints2)
 	}
+
+	fmt.Println("PART : ", closestPoints)
 
 	for i := 0; i < len(pointsSortedByY); i++ {
 		if math.Abs(pointsSortedByY[i].x-pointsSortedByX[middleIndex].x) <= minimalDistance {
@@ -92,8 +90,8 @@ func findClosestPoints(pointsSortedByX []Point, pointsSortedByY []Point, leftSid
 
 			if currentDistance < distance3 {
 				distance3 = currentDistance
-				closestPoints = append(closestPoints, pointsMemory[i])
-				closestPoints = append(closestPoints, pointsMemory[j])
+				closestPoints3 = append(closestPoints, pointsMemory[i])
+				closestPoints3 = append(closestPoints, pointsMemory[j])
 			}
 		}
 	}
@@ -129,8 +127,8 @@ func sortBothArr(points []Point) ([]Point, []Point) {
 }
 
 func main() {
-	input := []Point{{1, 1}, {1, 2}, {2, 1}, {2, 2}, {10, 10}}
-
+	//input := []Point{{1, 1}, {1, 2}, {2, 1}, {2, 2}, {10, 10}}
+	input := []Point{{4, 10}, {3, 7}, {9, 7}, {3, 4}, {5, 6}, {5, 4}, {6, 3}, {8, 1}, {3, 0}, {1, 6}}
 	inputSortedByX, inputSortedByY := sortBothArr(input)
 
 	fmt.Println(findClosestPoints(inputSortedByX, inputSortedByY, 0, len(input)-1))
