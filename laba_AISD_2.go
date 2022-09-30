@@ -71,8 +71,6 @@ func findClosestPoints(pointsSortedByX []Point, pointsSortedByY []Point, leftSid
 		copy(closestPoints, closestPoints2)
 	}
 
-	fmt.Println("PART : ", closestPoints)
-
 	for i := 0; i < len(pointsSortedByY); i++ {
 		if math.Abs(pointsSortedByY[i].x-pointsSortedByX[middleIndex].x) <= minimalDistance {
 			pointsMemory = append(pointsMemory, pointsSortedByY[i])
