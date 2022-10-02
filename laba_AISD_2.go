@@ -116,7 +116,6 @@ func findClosestPoints(pointsSortedByX []Point, pointsSortedByY []Point, leftSid
 }
 
 func sortBothArr(points []Point) ([]Point, []Point) {
-	fmt.Println("Entered snail coordinates: ", points)
 	sort.Slice(points, func(i, j int) bool { // sorting by x
 		return points[i].x < points[j].x
 	})
@@ -124,16 +123,12 @@ func sortBothArr(points []Point) ([]Point, []Point) {
 	pointsSortedByX := make([]Point, len(points))
 	copy(pointsSortedByX, points)
 
-	fmt.Println("Coordinates after sorting by х: ", pointsSortedByX)
-
 	sort.Slice(points, func(i, j int) bool { // sorting by y
 		return points[i].y < points[j].y
 	})
 
 	pointsSortedByY := make([]Point, len(points))
 	copy(pointsSortedByY, points)
-
-	fmt.Println("Coordinates after sorting by y: ", pointsSortedByY)
 
 	return pointsSortedByX, pointsSortedByY
 }
@@ -161,7 +156,7 @@ func main() {
 	minimalDistance, coordinates := findClosestPoints(inputSortedByX, inputSortedByY, 0, len(inputCoordinates)-1)
 	minimalTime := minimalDistance / 2 //divide by two because the snails are crawling towards and their speed is 1 sm /s ^ 2
 
-	fmt.Printf("\nResults. \nThe first pair of snails will reach each other during %.2f seconds.\nThey will go the same way %.2f meters. \nCoordinates.\nFirst snail: X: %.1f ,Y: %.1f.\nSecond snail: X: %.1f ,Y: %.1f", minimalTime, minimalDistance, coordinates[0].x, coordinates[0].y, coordinates[1].x, coordinates[1].y)
+	fmt.Printf("\nResults. \nThe first pair of snails will reach each other during %.2f seconds.\nThey will go the same way %.2f meters. \nCoordinates.\nFirst snail: X: %.1f ,Y: %.1f.\nSecond snail: X: %.1f ,Y: %.1f.\n", minimalTime, minimalDistance, coordinates[0].x, coordinates[0].y, coordinates[1].x, coordinates[1].y)
 	// in previous commit i tried to do another way by using goroutine, but different of ellapsed time win
 	//For this example ellapsed time less than with using goroutine
 }
