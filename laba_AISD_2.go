@@ -161,7 +161,7 @@ func main() {
 	minimalDistance, coordinates := findClosestPoints(inputSortedByX, inputSortedByY, 0, len(inputCoordinates)-1)
 	minimalTime := minimalDistance / 2 //divide by two because the snails are crawling towards and their speed is 1 sm /s ^ 2
 
-	fmt.Printf("\nResults. \nThe first pair of snails will reach each other during %.2f seconds.\nThey will go the same way %.2f meters. \nThey have coordinates: %.1f , %.1f", minimalTime, minimalDistance, coordinates[0].x, coordinates[0].y)
+	fmt.Printf("\nResults. \nThe first pair of snails will reach each other during %.2f seconds.\nThey will go the same way %.2f meters. \nCoordinates.\nFirst snail: X: %.1f ,Y: %.1f.\nSecond snail: X: %.1f ,Y: %.1f", minimalTime, minimalDistance, coordinates[0].x, coordinates[0].y, coordinates[1].x, coordinates[1].y)
 	// in previous commit i tried to do another way by using goroutine, but different of ellapsed time win
 	//For this example ellapsed time less than with using goroutine
 }
