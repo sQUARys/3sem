@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 	"math"
+	"os"
 	"sort"
-	"time"
 )
 
 type Point struct {
@@ -116,7 +116,7 @@ func findClosestPoints(pointsSortedByX []Point, pointsSortedByY []Point, leftSid
 }
 
 func sortBothArr(points []Point) ([]Point, []Point) {
-	fmt.Println("До сортировки: ", points)
+	fmt.Println("Entered snail coordinates: ", points)
 	sort.Slice(points, func(i, j int) bool { // sorting by x
 		return points[i].x < points[j].x
 	})
@@ -124,7 +124,7 @@ func sortBothArr(points []Point) ([]Point, []Point) {
 	pointsSortedByX := make([]Point, len(points))
 	copy(pointsSortedByX, points)
 
-	fmt.Println("После сортировки по х: ", pointsSortedByX)
+	fmt.Println("Coordinates after sorting by х: ", pointsSortedByX)
 
 	sort.Slice(points, func(i, j int) bool { // sorting by y
 		return points[i].y < points[j].y
@@ -133,21 +133,35 @@ func sortBothArr(points []Point) ([]Point, []Point) {
 	pointsSortedByY := make([]Point, len(points))
 	copy(pointsSortedByY, points)
 
-	fmt.Println("После сортировки по y: ", pointsSortedByY)
+	fmt.Println("Coordinates after sorting by y: ", pointsSortedByY)
 
 	return pointsSortedByX, pointsSortedByY
 }
 
 func main() {
-	t0 := time.Now()
-	//input := []Point{{1, 1}, {1, 2}, {2, 1}, {2, 2}, {10, 10}}
-	input := []Point{{4, 10}, {3, 7}, {9, 7}, {3, 4}, {5, 6}, {5, 4}, {6, 3}, {8, 1}, {3, 0}, {1, 6}}
-	inputSortedByX, inputSortedByY := sortBothArr(input)
+	numberOfSnails := 0
+	fmt.Print("Enter the number of snails(2 or more): ")
+	fmt.Fscan(os.Stdin, &numberOfSnails)
 
-	fmt.Println(findClosestPoints(inputSortedByX, inputSortedByY, 0, len(input)-1))
+	if numberOfSnails < 2 {
+		fmt.Println("Please rerun program and enter more than 1 snail")
+		return
+	}
+	var inputCoordinates []Point
 
-	t1 := time.Now()
-	fmt.Printf("Elapsed time: %v", t1.Sub(t0).Seconds()) // in previous commit i tried to do another way by using goroutine, but different of ellapsed time win
-	//For this example ellapsed time is near 0.000146667 seconds
-	// But for another my way, best of example time was near 0.000378375. So i decided to use this way
+	for i := 0; i < numberOfSnails; i++ {
+		snailCoordinates := Point{}
+		fmt.Print("Enter the coordinates of snail separated by a space(in meters):  ")
+		fmt.Scanln(&snailCoordinates.x, &snailCoordinates.y)
+		inputCoordinates = append(inputCoordinates, snailCoordinates)
+	}
+
+	inputSortedByX, inputSortedByY := sortBothArr(inputCoordinates)
+
+	minimalDistance, coordinates := findClosestPoints(inputSortedByX, inputSortedByY, 0, len(inputCoordinates)-1)
+	minimalTime := minimalDistance / 2 //divide by two because the snails are crawling towards and their speed is 1 sm /s ^ 2
+
+	fmt.Printf("\nResults. \nThe first pair of snails will reach each other during %.2f seconds.\nThey will go the same way %.2f meters. \nThey have coordinates: %.1f , %.1f", minimalTime, minimalDistance, coordinates[0].x, coordinates[0].y)
+	// in previous commit i tried to do another way by using goroutine, but different of ellapsed time win
+	//For this example ellapsed time less than with using goroutine
 }
