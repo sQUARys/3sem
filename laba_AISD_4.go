@@ -14,37 +14,48 @@ type TreeNode struct {
 }
 
 func main() {
-	t := &TreeNode{val: 8}
-	//
-	//t.left = &TreeNode{val: 3}       //left subtree
-	//t.right = &TreeNode{val: 3}      //right subtree
-	//t.left.right = &TreeNode{val: 6} //right subtree of left subtree
-	//t.right.left = &TreeNode{val: 5} //left subtree of the left subtree of the right subtree
-	//t.left.left = &TreeNode{val: 1}
-	//t.right.right = &TreeNode{val: 7}
-	//t.right.right.right = &TreeNode{val: 8}
-	//t.right.right.left = &TreeNode{val: 9}
+	t := &TreeNode{}
+	tmp := 0
 	for i := 0; i < 15; i++ {
-		t.Insert(rand.Int() % 50)
+		val := rand.Int() % 50
+		t.Insert(val)
+		if i == 7 {
+			tmp = val // to work with one number to getprev , getnext , delete
+		}
 	}
-	//fmt.Println("Pre")
-	//t.PreOrder()
-	//fmt.Println("\nPost")
-	//t.PostOrder()
-	//fmt.Println("\nMid")
 
-	//fmt.Print(arr)
-	//fmt.Println("Degree :", t.GetTreeDegree())
+	fmt.Println("Our tree : ")
+	t.PrintTree()
+	fmt.Println()
+
+	fmt.Println("Pre")
+	t.PreOrder()
+	fmt.Println("\n\nPost")
+	t.PostOrder()
+	fmt.Println("\n\nMid")
 	t.MidOrder()
-	t.GetPrev(49)
-	t.GetNext(48)
-	//visited, hashMap := t.bfs()
-	//fmt.Println("Visited var : ", visited)
-	//t.PrintTree()
+	fmt.Println("\n\nGet Min and Get Max:")
+	fmt.Println("Min var in tree :", t.GetMin())
+	fmt.Println("Max var in tree :", t.GetMax())
+	fmt.Println("\n\nGet Prev and Get Next:")
+	t.GetPrev(tmp)
+	t.GetNext(tmp)
+
+	fmt.Println("\nDegree of tree:", t.GetTreeDegree())
+
+	visited, _ := t.bfs() // second return value is a hashmap which contains all info about each level of binary tree
+	fmt.Println("\nVisiting all variables by bfs algo: ", visited)
+
+	fmt.Println("\nIs exist before deleting", tmp, "value : ", t.Find(tmp))
+	t.Delete(tmp)
+
+	fmt.Println("\nIs exist after deleting", tmp, "value : ", t.Find(tmp))
+	fmt.Println("\nBinary tree after deleting ", tmp)
+	t.PrintTree()
 }
 
 func (t *TreeNode) GetNext(value int) {
-	if _, ok := t.Find(value); ok {
+	if t.Find(value) {
 		current := t
 		next := &TreeNode{}
 		for current != nil {
@@ -62,7 +73,7 @@ func (t *TreeNode) GetNext(value int) {
 }
 
 func (t *TreeNode) GetPrev(value int) {
-	if _, ok := t.Find(value); ok {
+	if t.Find(value) {
 		current := t
 		prev := &TreeNode{}
 		for current != nil {
@@ -117,14 +128,14 @@ func (t *TreeNode) MidOrder() {
 	}
 }
 
-func (t *TreeNode) Find(value int) (TreeNode, bool) {
+func (t *TreeNode) Find(value int) bool {
 	if t == nil {
-		return TreeNode{}, false
+		return false
 	}
 
 	switch {
 	case value == t.val:
-		return *t, true
+		return true
 	case value < t.val:
 		return t.left.Find(value)
 	default:
@@ -212,9 +223,9 @@ func (t *TreeNode) Insert(value int) error {
 	return nil
 }
 
-func (t *TreeNode) bfs() (visited []TreeNode, hashMap map[int][]TreeNode) {
+func (t *TreeNode) bfs() (visited []int, hashMap map[int][]TreeNode) {
 	hashMap = make(map[int][]TreeNode)
-	visited = []TreeNode{}
+	visited = []int{}
 
 	if t == nil {
 		return
@@ -229,7 +240,7 @@ func (t *TreeNode) bfs() (visited []TreeNode, hashMap map[int][]TreeNode) {
 		}
 
 		for _, node := range nodeArr {
-			visited = append(visited, node)
+			visited = append(visited, node.val)
 			_, ok = hashMap[i+1]
 			if !ok {
 				hashMap[i+1] = []TreeNode{}
