@@ -11,7 +11,6 @@ type TreeNode struct {
 	val   int
 	left  *TreeNode
 	right *TreeNode
-	side  string
 }
 
 func main() {
@@ -33,15 +32,51 @@ func main() {
 	//fmt.Println("\nPost")
 	//t.PostOrder()
 	//fmt.Println("\nMid")
-	//t.MidOrder()
-	//
-	//fmt.Println("Degree :", t.GetTreeDegree())
 
+	//fmt.Print(arr)
+	//fmt.Println("Degree :", t.GetTreeDegree())
+	t.MidOrder()
+	t.GetPrev(49)
+	t.GetNext(48)
 	//visited, hashMap := t.bfs()
 	//fmt.Println("Visited var : ", visited)
-	//t.MidOrder()
-	//fmt.Println("")
-	t.PrintTree()
+	//t.PrintTree()
+}
+
+func (t *TreeNode) GetNext(value int) {
+	if _, ok := t.Find(value); ok {
+		current := t
+		next := &TreeNode{}
+		for current != nil {
+			if value < current.val {
+				next = current
+				current = current.left
+			} else {
+				current = current.right
+			}
+		}
+		if next != nil {
+			fmt.Println(fmt.Sprintf("Next element of %d is %d.", value, next.val))
+		}
+	}
+}
+
+func (t *TreeNode) GetPrev(value int) {
+	if _, ok := t.Find(value); ok {
+		current := t
+		prev := &TreeNode{}
+		for current != nil {
+			if value > current.val {
+				prev = current
+				current = current.right
+			} else {
+				current = current.left
+			}
+		}
+		if prev != nil {
+			fmt.Println(fmt.Sprintf("Previous element of %d is %d.", value, prev.val))
+		}
+	}
 }
 
 func (t *TreeNode) GetMin() int {
@@ -200,11 +235,9 @@ func (t *TreeNode) bfs() (visited []TreeNode, hashMap map[int][]TreeNode) {
 				hashMap[i+1] = []TreeNode{}
 			}
 			if node.left != nil {
-				node.left.side = "l"
 				hashMap[i+1] = append(hashMap[i+1], *node.left)
 			}
 			if node.right != nil {
-				node.right.side = "r"
 				hashMap[i+1] = append(hashMap[i+1], *node.right)
 			}
 
@@ -275,7 +308,7 @@ func (t *TreeNode) PrintTreeAux() ([]string, int, int, int) {
 		for _, line := range lines {
 			shiftedLines = append(shiftedLines, strings.Repeat(" ", u)+line)
 		}
-		return append([]string{firstLine, secondLine}, shiftedLines...), n + u, p + 2, n + u/2
+		return append([]string{firstLine, secondLine}, shiftedLines...), n + u, p + 2, u / 2
 	}
 
 	// two child
