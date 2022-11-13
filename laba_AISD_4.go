@@ -3,12 +3,45 @@ package main
 import (
 	"errors"
 	"fmt"
+	"math/rand"
+	"strings"
 )
 
 type TreeNode struct {
 	val   int
 	left  *TreeNode
 	right *TreeNode
+	side  string
+}
+
+func main() {
+	t := &TreeNode{val: 8}
+	//
+	//t.left = &TreeNode{val: 3}       //left subtree
+	//t.right = &TreeNode{val: 3}      //right subtree
+	//t.left.right = &TreeNode{val: 6} //right subtree of left subtree
+	//t.right.left = &TreeNode{val: 5} //left subtree of the left subtree of the right subtree
+	//t.left.left = &TreeNode{val: 1}
+	//t.right.right = &TreeNode{val: 7}
+	//t.right.right.right = &TreeNode{val: 8}
+	//t.right.right.left = &TreeNode{val: 9}
+	for i := 0; i < 15; i++ {
+		t.Insert(rand.Int() % 50)
+	}
+	//fmt.Println("Pre")
+	//t.PreOrder()
+	//fmt.Println("\nPost")
+	//t.PostOrder()
+	//fmt.Println("\nMid")
+	//t.MidOrder()
+	//
+	//fmt.Println("Degree :", t.GetTreeDegree())
+
+	//visited, hashMap := t.bfs()
+	//fmt.Println("Visited var : ", visited)
+	//t.MidOrder()
+	//fmt.Println("")
+	t.PrintTree()
 }
 
 func (t *TreeNode) GetMin() int {
@@ -144,58 +177,152 @@ func (t *TreeNode) Insert(value int) error {
 	return nil
 }
 
-//func (t *TreeNode) GetNext(value int) int {
-//	current := t
-//	successor := TreeNode{}
-//
-//	if current.val > value {
-//		successor = *current
-//		current = current.left
-//	} else {
-//		current = current.right
-//	}
-//
-//	return successor.val
-//}
+func (t *TreeNode) bfs() (visited []TreeNode, hashMap map[int][]TreeNode) {
+	hashMap = make(map[int][]TreeNode)
+	visited = []TreeNode{}
 
-//func (t *TreeNode) Bfs(node TreeNode) []int {
-//	queue := []*TreeNode{}
-//	values := []int{}
-//	queue = append(queue, &node)
-//
-//	for len(queue) > 0 {
-//		var tempNode = queue[0]
-//		queue = queue[1:]
-//
-//		values = append(values, tempNode.val)
-//
-//		if tempNode.left != nil {
-//			queue = append(queue, tempNode.left)
-//		}
-//		if tempNode.right != nil {
-//			queue = append(queue, tempNode.right)
-//		}
-//	}
-//
-//	return values
-//}
+	if t == nil {
+		return
+	}
 
-func main() {
-	t := &TreeNode{val: 8}
+	hashMap[0] = []TreeNode{*t}
 
-	t.Insert(1)
-	t.Insert(2)
-	t.Insert(3)
-	t.Insert(4)
-	t.Insert(5)
-	t.Insert(6)
-	t.Insert(7)
+	for i := 0; ; {
+		nodeArr, ok := hashMap[i]
+		if !ok {
+			break
+		}
 
-	fmt.Println("Pre")
-	t.PreOrder()
-	fmt.Println("\nPost")
-	t.PostOrder()
-	fmt.Println("\nMid")
-	t.MidOrder()
+		for _, node := range nodeArr {
+			visited = append(visited, node)
+			_, ok = hashMap[i+1]
+			if !ok {
+				hashMap[i+1] = []TreeNode{}
+			}
+			if node.left != nil {
+				node.left.side = "l"
+				hashMap[i+1] = append(hashMap[i+1], *node.left)
+			}
+			if node.right != nil {
+				node.right.side = "r"
+				hashMap[i+1] = append(hashMap[i+1], *node.right)
+			}
 
+		}
+		i += 1
+	}
+
+	return
+}
+
+func (t *TreeNode) GetTreeDegree() int {
+	maxDegree := 0
+
+	if t == nil {
+		return maxDegree
+	}
+
+	if t.left.GetTreeDegree() > t.right.GetTreeDegree() {
+		maxDegree = t.left.GetTreeDegree()
+	} else {
+		maxDegree = t.right.GetTreeDegree()
+	}
+
+	return maxDegree + 1
+}
+
+//Printing part
+
+func (t *TreeNode) PrintTree() {
+	lines, _, _, _ := t.PrintTreeAux()
+	for _, line := range lines {
+		fmt.Println(line)
+	}
+}
+
+func (t *TreeNode) PrintTreeAux() ([]string, int, int, int) {
+	// no child
+	if t.right == nil && t.left == nil {
+		line := fmt.Sprintf("%d", t.val)
+		width := len(line)
+		height := 1
+		middle := width / 2
+		return []string{line}, width, height, middle
+	}
+
+	// only left child
+	if t.right == nil {
+		lines, n, p, x := t.left.PrintTreeAux()
+		s := fmt.Sprintf("%d", t.val)
+		u := len(s)
+		firstLine := strings.Repeat(" ", x+1) + strings.Repeat("_", n-x-1) + s
+		secondLine := strings.Repeat(" ", x) + "/" + strings.Repeat(" ", n-x-1+u)
+		shiftedLines := []string{}
+		for _, line := range lines {
+			shiftedLines = append(shiftedLines, line+strings.Repeat(" ", u))
+		}
+		return append([]string{firstLine, secondLine}, shiftedLines...), n + u, p + 2, n + u/2
+	}
+
+	//only right child
+	if t.left == nil {
+		lines, n, p, x := t.right.PrintTreeAux()
+		s := fmt.Sprintf("%d", t.val)
+		u := len(s)
+		firstLine := s + strings.Repeat("_", x) + strings.Repeat(" ", n-x)
+		secondLine := strings.Repeat(" ", u+x) + "\\" + strings.Repeat(" ", n-x-1)
+		shiftedLines := []string{}
+		for _, line := range lines {
+			shiftedLines = append(shiftedLines, strings.Repeat(" ", u)+line)
+		}
+		return append([]string{firstLine, secondLine}, shiftedLines...), n + u, p + 2, n + u/2
+	}
+
+	// two child
+	left, n, p, x := t.left.PrintTreeAux()
+	right, m, q, y := t.right.PrintTreeAux()
+	s := fmt.Sprintf("%d", t.val)
+	u := len(s)
+	firstLine := strings.Repeat(" ", x+1) + strings.Repeat("_", n-x-1) + s + strings.Repeat("_", y) + strings.Repeat(" ", m-y)
+	secondLine := strings.Repeat(" ", x) + "/" + strings.Repeat(" ", n-x-1+u+y) + "\\" + strings.Repeat(" ", m-y-1)
+
+	if p < q {
+		for i := 0; i < q-p; i++ {
+			left = append(left, strings.Repeat(" ", n))
+		}
+	} else if p > q {
+		for i := 0; i < p-q; i++ {
+			right = append(right, strings.Repeat(" ", m))
+		}
+	}
+
+	zipLines := Zip(left, right)
+	lines := []string{firstLine, secondLine}
+	for _, b := range zipLines {
+		lines = append(lines, b.First+strings.Repeat(" ", u)+b.Second)
+	}
+	return lines, n + m + u, Max(p, q) + 2, n + u/2
+}
+
+type Pair[T, U any] struct {
+	First  T
+	Second U
+}
+
+func Zip[T, U any](ts []T, us []U) []Pair[T, U] {
+	if len(ts) != len(us) {
+		panic("slices have different length")
+	}
+	pairs := make([]Pair[T, U], len(ts))
+	for i := 0; i < len(ts); i++ {
+		pairs[i] = Pair[T, U]{ts[i], us[i]}
+	}
+	return pairs
+}
+
+func Max(x, y int) int {
+	if x < y {
+		return y
+	}
+	return x
 }
